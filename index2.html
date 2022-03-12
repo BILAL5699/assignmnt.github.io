@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+23 <!-- Fig. 9.7: Craps.html -->
+4 <!-- Craps game simulation. -->
+5 <html>
+6 <head>
+7 <meta charset = "utf-8"> 8 <title>Craps Game Simulation</title>
+9 <style type = "text/css">
+10 p.red { color: red }
+11 img { width: 54px; height: 54px; }
+12 div { border: 5px ridge royalblue;
+13 padding: 10px; width: 120px;
+14 margin-bottom: 10px; }
+15 .point { margin: 0px; }
+16 </style>
+17 <script>
+// variables used to refer to page elements
+19 var pointDie1Img; // refers to first die point img
+20 var pointDie2Img; // refers to second die point img
+21 var rollDie1Img; // refers to first die roll img
+22 var rollDie2Img; // refers to second die roll img
+23 var messages; // refers to "messages" paragraph
+24 var playButton; // refers to Play button
+25 var rollButton; // refers to Roll button
+26 var dicerolling; // refers to audio clip for dice
+27
+28 // other variables used in program
+29 var myPoint; // point if no win/loss on first roll
+30 var die1Value; // value of first die in current roll
+31 var die2Value; // value of second die in current roll
+32
+33 // starts a new game
+34 function startGame()
+35 {
+36 // get the page elements that we'll interact with
+37 dicerolling = document.getElementById( "dicerolling" );
+38 pointDie1Img = document.getElementById( "pointDie1" );
+39 pointDie2Img = document.getElementById( "pointDie2" );
+40 rollDie1Img = document.getElementById( "rollDie1" );
+41 rollDie2Img = document.getElementById( "rollDie2" );
+42 messages = document.getElementById( "messages" );
+43 playButton = document.getElementById( "play" );
+44 rollButton = document.getElementById( "roll" );
+45
+46 // prepare the GUI
+47
+48 setImage( pointDie1Img ); // reset image for new game
+49 setImage( pointDie2Img ); // reset image for new game
+50 setImage( rollDie1Img ); // reset image for new game
+51 setImage( rollDie2Img ); // reset image for new game
+52
+53 myPoint = 0; // there is currently no point
+54
+55 } // end function startGame
+56
+57 // perform first roll of the game
+58 function firstRoll()
+59 {
+60
+61
+62 // determine if the user won, lost or must continue rolling
+63 switch (sumOfDice)
+64 {
+65 case 7: case 11: // win on first roll
+66 messages.innerHTML =
+67 "You Win!!! Click Play to play again.";
+68 break;
+case 2: case 3: case 12: // lose on first roll
+70 messages.innerHTML =
+71 "Sorry. You Lose. Click Play to play again.";
+72 break;
+73 default: // remember point
+74 myPoint = sumOfDice;
+75 setImage( pointDie1Img, die1Value );
+76 setImage( pointDie2Img, die2Value );
+77 messages.innerHTML = "Roll Again!";
+78 rollButton.disabled = false; // enable rollButton
+79 playButton.disabled = true; // disable playButton
+80 break;
+81 } // end switch
+82 } // end function firstRoll
+83
+84 // called for subsequent rolls of the dice
+85 function rollAgain()
+86 {
+87
+88
+89 if (sumOfDice == myPoint)
+90 {
+91 messages.innerHTML =
+92 "You Win!!! Click Play to play again.";
+93 rollButton.disabled = true; // disable rollButton
+94 playButton.disabled = false; // enable playButton
+95 } // end if
+96 else if (sumOfDice == 7) // craps
+97 {
+98 messages.innerHTML =
+99 "Sorry. You Lose. Click Play to play again.";
+100 rollButton.disabled = true; // disable rollButton
+101 playButton.disabled = false; // enable playButton
+102 } // end else if
+103 } // end function rollAgain
+104
+105 // roll the dice
+106 function rollDice()
+107 {
+108 dicerolling.play(); // play dice rolling sound
+109
+110 // clear old die images while rolling sound plays
+111 die1Value = NaN;
+112 die2Value = NaN;
+113 showDice();
+114
+115 die1Value = Math.floor(1 + Math.random() * 6);
+116 die2Value = Math.floor(1 + Math.random() * 6);
+117 return die1Value + die2Value;
+118 } // end function rollDice
+119
+var sumOfDice = rollDice(); // subsequent roll of the dice
+// display rolled dice
+121 function showDice()
+122 {
+123 setImage( rollDie1Img, die1Value );
+124 setImage( rollDie2Img, die2Value );
+125 } // end function showDice
+126
+127 // set image source for a die
+128 function setImage( dieImg, dieValue )
+129 {
+130 if ( )
+131 dieImg.src = "die" + dieValue + ".png";
+132 else
+133 dieImg.src = "blank.png";
+134 } // end function setImage
+135
+136 // register event liseners
+137 function start()
+138 {
+139 var playButton = document.getElementById( "play" );
+140 playButton.addEventListener( "click", startGame, false );
+141 var rollButton = document.getElementById( "roll" );
+142 rollButton.addEventListener( "click", rollAgain, false );
+143
+144
+145 } // end function start
+146
+147 window.addEventListener( "load", start, false );
+148 </script>
+149 </head>
+150 <body>
+151<audio id = "dicerolling" preload = "auto">
+<source src = "http://test.deitel.com/dicerolling.mp3"
+type = "audio/mpeg">
+<source src = "http://test.deitel.com/dicerolling.ogg"
+type = "audio/ogg">
+Browser does not support audio tag</audio>
+152
+153
+154
+155
+156
+157 <p><a href = "CrapsRules.html">Click here for a short video
+158 explaining the basic Craps rules</a></p>
+159 <div id = "pointDiv">
+160 <p class = "point">Point is:</p>
+161 <img id = "pointDie1" src = "blank.png"
+162 alt = "Die 1 of Point Value">
+163 <img id = "pointDie2" src = "blank.png"
+164 alt = "Die 2 of Point Value">
+165 </div>
+166 <div class = "rollDiv">
+167 <img id = "rollDie1" src = "blank.png"
+168 alt = "Die 1 of Roll Value">
+169 <img id = "rollDie2" src = "blank.png"
+170 alt = "Die 2 of Roll Value">
+171 </div>
+<form action = "#">
+173 <input id = "play" type = "button" value = "Play">
+174 <input id = "roll" type = "button" value = "Roll">
+175 </form>
+176 <p id = "messages" class = "red">Click Play to start the game</p>
+177 </body>
+178 </html>
